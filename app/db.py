@@ -25,22 +25,45 @@ def get_user(filter={}):
     collection = get_collection("user")
     return collection.find_one(filter)
 
-def insert_user(data):
-    collection = get_collection("user")
-    row = collection.insert_one(data)
-    return row
+def ID(User={}):
+    collection = get_collection("ID")
+    return collection.find(User)
 
-def update_user(filter, update):
-    collection = get_collection("user")    
-    return collection.update_one(filter, update, upsert=False)    
+def nickname(User={}):
+    collection = nickname("nickname")
+    return collection.find_one(User)
 
-def delete_user(data):
-    collection = get_collection("user")
-    collection.delete_one(data)
+def no_tlp(User={}):
+    collection = no_tlp("nomor")
+    return collection.find(User)
+    
+def pin(User={}):
+    collection = pin("pin")
+    return collection.find(User)
+    
+def nama(User={}):
+    collection = nama("nama")
+    return collection.find(User)
 
-def get_bill_category(cat):
-    collection = get_collection("bill")
-    row = collection.find_one(cat)
+def contact_id(User={}):
+    collection = contact_id("kontak")
+    return collection.find(User)
+
+def User_id(UserContact={}):
+    collection = get_collection("id user")
+    return collection.find(UserContact)
+
+def Contact_id(UserContact={}):
+    collection = get_collection("id kontak")
+    return collection.find(UserContact)
+
+def Created_at(UserContact={}):
+    collection = get_collection("dibuat")
+    return collection.created_one(UserContact)
+
+def Updated_at(UserContact={}):
+    collection = get_collection("diupdate")
+    row = collection.update_one(UserContact)
     return row
     
 def close_db(e=None):
