@@ -1,7 +1,9 @@
 import click
 import pymongo
-from flask import current_app, g
+from flask import current_app, g, Flask
 from flask.cli import with_appcontext
+
+current_app.config['DATABASE'] = 'mongodb://localhost:27017/'
 
 def get_db():
     mongocon = current_app.config['MONGO_CON']
@@ -25,34 +27,39 @@ def get_user(filter={}):
     collection = get_collection("user")
     return collection.find_one(filter)
 
-def create_user(data):
+def insert_user(data):
     collection = get_collection("user")
-    row = collection.create_one(data)
+    row = collection.insert_one(data)
     return row
 
 def update_user(filter, update):
     collection = get_collection("user")    
-    return collection.update_one(filter, update)    
+    return collection.update_one(filter, update, upsert=False)    
 
 def delete_user(data):
     collection = get_collection("user")
     collection.delete_one(data)
 
-def contact_id(User={}):
-    collection = contact_id("kontak")
-    return collection.find(User)
+def get_contacts(filter={}):
+    collection = get_collection("contact")
+    return collection.find(filter)
 
-def User_id(UserContact={}):
-    collection = get_collection("id user")
-    return collection.find(UserContact)
+def get_contacts(filter={}):
+    collection = get_collection("contact")
+    return collection.find_one(filter)
 
-def Created_at(UserContact={}):
-    collection = get_collection("dibuat")
-    return collection.created_one(UserContact)
+def insert_contacts(data):
+    collection = get_collection("contact")
+    row = collection.insert_one(data)
+    return row
 
-def Updated_at(UserContact={}):
-    collection = get_collection("diupdate")
-    row = collection.update_one(UserContact)
+def update_contacts(filter, update):
+    collection = get_collection("contact")    
+    return collection.update_one(filter, update, upsert=False)    
+
+def delete_contacts(data):
+    collection = get_collection("contact")
+    row = collection.update_one(data)
     return row
     
 def close_db(e=None):
@@ -74,4 +81,3 @@ def init_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
-

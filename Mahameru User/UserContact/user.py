@@ -3,6 +3,7 @@ import uuid
 from flask import Blueprint, render_template, abort
 from jinja2 import TemplateNotFound
 from UserContact.db import *
+from bson.objectid import ObjectId
 
 bp = Blueprint('user', __name__,
                         template_folder='templates')
@@ -25,12 +26,10 @@ def getuser():
     data = get_user()
     return data
 
-# TODO : fix this so it match with the given docs
-
 @bp.route('/createuser', methods=['POST'])
 def createuser():
         try:
-            # for testing purpose only getting one request json
+            bp = {}
             bp['name'] = request.json['user']
             bp['no_telp'] = request.json['no_telp']
             bp['pin'] = request.json['pin']
@@ -38,7 +37,7 @@ def createuser():
             bp['updated_at'] = request.json['updated_at']
             bp['userid'] = uuid.uuid4()
 
-            response = jsonify({'id' : bp['userid']})
+            response = get_user({"_id" : ObjectId('userid')})
             response.status_code = 200
         except Exception as e:
             print(e)
@@ -47,17 +46,17 @@ def createuser():
         finally:
             return response
 
-# TODO : dont modify it untill the above route is fixed
 @bp.route('/createuser', methods=['PUT'])
 def edituser():
         try:
+            bp = {}
             bp['userid'] = request.json['userid']
             bp['name'] = request.json['name']
             bp['no_telp'] = request.json['no_telp']
             bp['pin'] = request.json['pin']
             bp['updated_at'] = request.json['updated_at']
 
-            response = jsonify({'id' : bp['userid']})
+            response = insert_user(bp)
             response.status_code = 200
         except Exception as e:
             print(e)
@@ -67,11 +66,10 @@ def edituser():
             return response
 
 @bp.route('/createuser/<string:user_id>', methods=['GET'])
-def newuser(user_id):
+def newuser(userid):
     try:
-        # this code must be changed after implementing the database
-        if user_id == '2c535c8b-5d2b-4a72-9268-1c83aaf61902':
-            response = jsonify({'user': 'Aditya'})
+        if userid == '3':
+            response = get_user({"_id" : ObjectId('userid')})
             response.status_code = 200
     except Exception as e:
         print(e)
@@ -82,7 +80,7 @@ def newuser(user_id):
 
 @bp.route('/deluser', methods=['DELETE'])
 def deleteuser():
-    # this code must be fixed after implmenting the database and getting clarity from director
+    row = delete_user({"_id": row.inserted_id})
     return jsonify({'mesage' : 'deleting the user that you want'})
 
 if __name__ == "__user__":
