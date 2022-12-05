@@ -9,15 +9,10 @@ user = Blueprint('user', __name__,
                         template_folder='templates')
 
 
-# placeholder data
 
-
-# user 
 @user.route('/get', methods=['GET'])
 def getuser():
     try:
-        # kalau variabel user = {} diapus, makan akan dapet response {'message': 'Failed to create user'}
-        # jadi kesalahannya itu belom nyambung ke mongodb
         current_app.logger.debug("test")
         user = {}
         user['userid'] = 3
@@ -42,8 +37,6 @@ def getuser():
 @user.route('/createuser', methods=['POST'])
 def createuser():
     try:
-        # ini juga sama. kalau nambahin variabel user = {}, baru bisa di run.
-        # sama kek tadi, tinggal konekin ke mongodbnya.
         user['name'] = request.json['user']
         user['no_telp'] = request.json['no_telp']
         user['pin'] = request.json['pin']
@@ -64,7 +57,6 @@ def createuser():
 @user.route('/createuser', methods=['PUT'])
 def edituser():
     try:
-        # ini juga sama
         user['userid'] = request.json['userid']
         user['name'] = request.json['name']
         user['no_telp'] = request.json['no_telp']
@@ -83,7 +75,6 @@ def edituser():
 @user.route('/createuser/<string:user_id>', methods=['GET'])
 def newuser(user_id): #/createuser/2c535c8b-5d2b-4a72-9268-1c83aaf61902
     try:
-        # ini bisa.
         if user_id == '2c535c8b-5d2b-4a72-9268-1c83aaf61902':
             response = jsonify({'user': 'Daniella'})
             response.status_code = 200
@@ -96,7 +87,6 @@ def newuser(user_id): #/createuser/2c535c8b-5d2b-4a72-9268-1c83aaf61902
 
 @user.route('/user', methods=['DELETE'])
 def deleteuser():
-    # belom di tes
     return jsonify({'mesage' : 'deleting the user that you want'})
 
 if __name__ == "__main__":
