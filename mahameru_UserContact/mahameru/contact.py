@@ -9,15 +9,10 @@ contact = Blueprint('contact', __name__,
                         template_folder='templates')
 
 
-# placeholder data
 
-
-# contact 
 @contact.route('/get', methods=['GET'])
 def getcontact():
     try:
-        # kalau variabel contact = {} diapus, makan akan dapet response {'message': 'Failed to create contact'}
-        # jadi kesalahannya itu belom nyambung ke mongodb
         current_app.logger.debug("test")
         contact = {}
         contact['contactid'] = 3
@@ -42,8 +37,6 @@ def getcontact():
 @contact.route('/createcontact', methods=['POST'])
 def createcontact():
     try:
-        # ini juga sama. kalau nambahin variabel contact = {}, baru bisa di run.
-        # sama kek tadi, tinggal konekin ke mongodbnya.
         contact['name'] = request.json['contact']
         contact['no_telp'] = request.json['no_telp']
         contact['pin'] = request.json['pin']
@@ -64,7 +57,6 @@ def createcontact():
 @contact.route('/createcontact', methods=['PUT'])
 def editcontact():
     try:
-        # ini juga sama
         contact['contactid'] = request.json['contactid']
         contact['name'] = request.json['name']
         contact['no_telp'] = request.json['no_telp']
@@ -96,7 +88,6 @@ def newcontact(contact_id): #/createcontact/2c535c8b-5d2b-4a72-9268-1c83aaf61902
 
 @contact.route('/contact', methods=['DELETE'])
 def deletecontact():
-    # belom di tes
     return jsonify({'mesage' : 'deleting the contact that you want'})
 
 if __name__ == "__main__":
