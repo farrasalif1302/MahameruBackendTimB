@@ -61,7 +61,7 @@ def delete_user(data):
     row = collection.delete_one(data)
     return row
 
-# class ini masih salah. makanya gw jadiin comment. kalau kg, malah error nanti.
+
 #def close_db(e=None):
     #db = g.pop(current_app.config['DATABASE'], None)
     #if db is not None:
