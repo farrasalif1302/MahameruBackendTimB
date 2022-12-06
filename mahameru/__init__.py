@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from . import db
+from .model import db
 from . import user
 # file ini udah bener
 

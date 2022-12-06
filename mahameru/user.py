@@ -46,22 +46,26 @@ def add_user():
     
 '''
 
-@bp.route('/updateuser/<_id>', methods = ['PUT'])
-def update_user(id): # belum kelar, jsonify user_old sebagai param 1
+@bp.route('/updateuser/<id>', methods = ['PUT'])
+def updateuser(id): # belum kelar, jsonify user_old sebagai param 1
     form = request.form
     user = {}
     user["name"] = form['name']
     user["nickname"] = form['nickname']
     user["notelp"] =form['notelp']
     user["pin"] = form['pin']
-    user["updatedate"] = form['created_at'] # ini juga sistem yang input
-    user["contactid"] = form['contact_id']
+    #user["updatedate"] = form['created_at'] # ini juga sistem yang input
+    #user["contactid"] = form['contact_id']
 
-    if request.method == "POST" and form['name']:
-        _id = update_user(user) # db_user belum benar
-        resp = dumps(_id)
-        current_app.logger.debug(_id)
-        return resp
+    #current_app.logger.debug(id)
+
+
+    if form['name']:
+        count = update_users(id, user) # db_user belum benar
+       
+        #current_app.logger.debug(_id)
+        return str(count)
+        #return
     else:
         return "Failed to update user"
 
@@ -72,7 +76,7 @@ def update_user(id): # belum kelar, jsonify user_old sebagai param 1
     2. Jika tidak ada user yg ditemukan, kembalikan string "Tidak ada user"
 '''
 
-@bp.route('/getuser') #tampilin user (kelar)
+@bp.route('/users') #tampilin user (kelar)
 def user_all():
     mongo = PyMongo(current_app)
     user = mongo.db.user.find()
@@ -96,8 +100,8 @@ def user_one(id):
     1. Nama route ganti ke /deleteuser
     2. check filter query delete row karena row yang diingikan tidak terhapus
 '''
-@bp.route('/delete/<id>',methods=['DELETE']) # hapus user sesuai dengan user ID
-def delete_user(id):
+@bp.route('/deleteuser/<id>',methods=['DELETE']) # hapus user sesuai dengan user ID
+def deleteuser(id):
     mongo = PyMongo(current_app)
     #app.logger.debug()
     mongo.db.user.delete_one({'id':ObjectId(id)})

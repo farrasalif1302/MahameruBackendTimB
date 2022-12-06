@@ -1,6 +1,7 @@
 import click
 import pymongo
 from bson.json_util import dumps
+from bson.objectid import ObjectId 
 from flask import current_app, g
 from flask.cli import with_appcontext
 
@@ -30,8 +31,29 @@ def get_user_wID(id):
     result = collection.find_one({'_id':ObjectId(id)})
     resp = dumps(user)
 
-def update_user(user):
+def update_users(id, user):
     # param 1 > user_old , param 2 > user_new
     collection = get_collection("user")
-    result = collection.update_one(user_old, user)
+    current_app.logger.debug(id)
+    current_app.logger.debug(user)
+   
+    result = collection.update_one({"_id": ObjectId(id)},  { "$set": user }, upsert=False)
+    return result.matched_count
+
+def get_user(filter={}):
+    collection = get_collection("user")
+    return collection.find(filter)
+
+def get_user(filter={}):
+    collection = get_collection("user")
+    return collection.find_one(filter)
+
+
+   
+
+def delete_user(data):
+    collection = get_collection("user")
+    row = collection.delete_one(data)
+    return row
+
     
