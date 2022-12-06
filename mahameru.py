@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#ini kg usah dipikirin
 import sys
 import logging
 
