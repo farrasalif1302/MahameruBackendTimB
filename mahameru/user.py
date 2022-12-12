@@ -22,13 +22,13 @@ def add_user():
     user["nickname"] = form['nickname']
     user["notelp"] =form['notelp']
     user["pin"] = form['pin']
-    user["createdate"] = form['created_at'] # ini diganti jadi system yg ambil
-    user["contactid"] = form['contact_id']
+    #user["createdate"] = form['created_at'] # ini diganti jadi system yg ambil
+    #user["contactid"] = form['contact_id']
 
-    if request.method == "POST" and form['name']:
-        _id = insert_user(user)
-        resp = dumps(_id)
-        current_app.logger.debug(_id)
+    if form['name']:
+        count = insert_user(user)
+        resp = dumps(count)
+        current_app.logger.debug(count)
         return resp
     else:
         return "Unable to store data into database"
@@ -78,8 +78,7 @@ def updateuser(id): # belum kelar, jsonify user_old sebagai param 1
 
 @bp.route('/users') #tampilin user (kelar)
 def user_all():
-    mongo = PyMongo(current_app)
-    user = mongo.db.user.find()
+    user = get_user()       
     resp = dumps(user)
     return resp
 
@@ -89,10 +88,9 @@ def user_all():
 '''
 
 @bp.route('/user/<id>') # tampilin user sesuai dengan user ID
-def user_one(id):
-    mongo = PyMongo(current_app)
-    user = mongo.db.user.find_one({'_id':ObjectId(id)})
-    resp = dumps(user)
+def user_one(id, user):
+    user = get_user_wID(id, user)
+    resp = dumps(id, user)
     return resp
 
 '''
@@ -101,7 +99,7 @@ def user_one(id):
     2. check filter query delete row karena row yang diingikan tidak terhapus
 '''
 @bp.route('/deleteuser/<id>',methods=['DELETE']) # hapus user sesuai dengan user ID
-def deleteuser(id):
+def delete_user(id):
     mongo = PyMongo(current_app)
     #app.logger.debug()
     mongo.db.user.delete_one({'id':ObjectId(id)})
