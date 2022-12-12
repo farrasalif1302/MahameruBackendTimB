@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, abort, request, jsonify
 from jinja2 import TemplateNotFound
-from .model.db_contact import *
+from .model.db_user import *
 from bson.json_util import dumps
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 
-bp = Blueprint('contact', __name__,
+bp = Blueprint('user', __name__,
                         template_folder='templates')
 
 '''
@@ -14,19 +14,19 @@ bp = Blueprint('contact', __name__,
     2. Untuk route ini pada key created_at dan updated_at digenerate oleh sistem
     '''
 
-@bp.route('/createcontact',methods=['POST']) # KELAR
-def add_contact():
+@bp.route('/createuser',methods=['POST']) # KELAR
+def add_user():
     form = request.form
-    contact = {}
-    contact["name"] = form['name']
-    contact["nickname"] = form['nickname']
-    contact["notelp"] =form['notelp']
-    contact["pin"] = form['pin']
-    #contact["createdate"] = form['created_at'] # ini diganti jadi system yg ambil
-    #contact["contactid"] = form['contact_id']
+    user = {}
+    user["name"] = form['name']
+    user["nickname"] = form['nickname']
+    user["notelp"] =form['notelp']
+    user["pin"] = form['pin']
+    #user["createdate"] = form['created_at'] # ini diganti jadi system yg ambil
+    #user["contactid"] = form['contact_id']
 
     if form['name']:
-        count = insert_contact(contact)
+        count = insert_user(user)
         resp = dumps(count)
         current_app.logger.debug(count)
         return resp
@@ -42,66 +42,66 @@ def add_contact():
     4. Konfiguras baca dari settings.cfg
     5. Pada kondisi " if " pastikan checking kondisinya benar
     6. Kembalikan ObjectID untuk row yang berhasil di update sebagai json
-    7. Nama route ubah ke updatecontact untuk mencerminkan tujuan
+    7. Nama route ubah ke updateuser untuk mencerminkan tujuan
     8. Field updated_at ditarik dari datesystem tanpa menyentuh existing data di field created_at
     
 '''
 
-@bp.route('/updatecontact/<id>', methods = ['PUT'])
-def updatecontact(id): # kelar
+@bp.route('/updateuser/<id>', methods = ['PUT'])
+def updateuser(id): # kelar
     form = request.form
-    contact = {}
-    contact["name"] = form['name']
-    contact["nickname"] = form['nickname']
-    contact["notelp"] =form['notelp']
-    contact["pin"] = form['pin']
-    #contact["updatedate"] = form['created_at'] # ini juga sistem yang input
-    #contact["contactid"] = form['contact_id']
+    user = {}
+    user["name"] = form['name']
+    user["nickname"] = form['nickname']
+    user["notelp"] =form['notelp']
+    user["pin"] = form['pin']
+    #user["updatedate"] = form['created_at'] # ini juga sistem yang input
+    #user["contactid"] = form['contact_id']
 
     #current_app.logger.debug(id)
 
 
     if form['name']:
-        count = update_contacts(id, contact) # db_contact belum benar
+        count = update_users(id, user) # db_user belum benar
        
         #current_app.logger.debug(_id)
         return str(count)
         #return
     else:
-        return "Failed to update contact"
+        return "Failed to update user"
 
 
 '''
     Feedback :
-    1. nama route ganti ke /contacts
-    2. Jika tidak ada contact yg ditemukan, kembalikan string "Tidak ada contact"
+    1. nama route ganti ke /users
+    2. Jika tidak ada user yg ditemukan, kembalikan string "Tidak ada user"
 '''
 
-@bp.route('/contacts') #tampilin contact (kelar)
-def contact_all():
-    contact = get_contact()       
-    resp = dumps(contact)
+@bp.route('/users') #tampilin user (kelar)
+def user_all():
+    user = get_user()       
+    resp = dumps(user)
     return resp
 
 '''
     Feedback :
-    1. Jika tidak ada contact yg ditemukan, kembalikan string "Tidak ada contact dengan objectID yang dicari"
+    1. Jika tidak ada user yg ditemukan, kembalikan string "Tidak ada user dengan objectID yang dicari"
 '''
 
-@bp.route('/contact/<id>') # tampilin contact sesuai dengan contact ID
-def contact_one(id):
-    contact = get_contact_wID(id)
-    resp = dumps(contact)
+@bp.route('/user/<id>') # tampilin user sesuai dengan user ID
+def user_one(id):
+    user = get_user_wID(id)
+    resp = dumps(user)
     return resp
 
 
 '''
     Feedback :
-    1. Nama route ganti ke /deletecontact
+    1. Nama route ganti ke /deleteuser
     2. check filter query delete row karena row yang diingikan tidak terhapus
 '''
-@bp.route('/deletecontact/<id>',methods=['DELETE']) # hapus contact sesuai dengan contact ID
-def deletecontact(id):
-    contact = delete_contact(id)
-    resp = dumps(contact)
+@bp.route('/deleteuser/<id>',methods=['DELETE']) # hapus user sesuai dengan user ID
+def deleteuser(id):
+    user = delete_user(id)
+    resp = dumps(user)
     return resp
