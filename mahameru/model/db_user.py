@@ -20,7 +20,7 @@ def get_collection(colname):
 """
 Helper function to query all contact on system 
 """
-def insert_user(user):
+def insert_user(id, user):
     collection = get_collection("user")
     #_id = mongo.db.user.insert_one({"userid": _userid, "name": _name, "nickname": _nickname ,"notelp": _notelp, "pin" : _pin, "created_at" : createdat,  "contact_id" : contactid })
     result = collection.insert_one(user)
@@ -28,9 +28,12 @@ def insert_user(user):
 
 def get_user_wID(id):
     collection = get_collection("user")
-    result = collection.find_one({'_id':ObjectId(id)})
-    resp = dumps(user)
+    result = collection.find_one({"_id": ObjectId(id)})
+    return collection.find(result)
 
+'''
+    Todo : Find duplicate update user function
+'''
 def update_users(id, user):
     # param 1 > user_old , param 2 > user_new
     collection = get_collection("user")
@@ -44,16 +47,10 @@ def get_user(filter={}):
     collection = get_collection("user")
     return collection.find(filter)
 
-def get_user(filter={}):
+
+def delete_user(id):
     collection = get_collection("user")
-    return collection.find_one(filter)
-
-
-   
-
-def delete_user(data):
-    collection = get_collection("user")
-    row = collection.delete_one(data)
-    return row
+    result = collection.delete_one({"_id": ObjectId(id)})
+    return  "user has been deleted"
 
     
