@@ -24,16 +24,23 @@ def get_chat_collection():
     current_app.logger.debug(data)
     return data
 
-def deletechat(id):
-    collection = get_collection("chat")
-    result = collection.delete_one({"_id" : ObjectId(id)})
-    print(str(id) + " been deleted")
-    return id
-
 def sendchat(chat):
     collection = get_collection("chat")
     result = collection.insert_one(chat)
     return result.inserted_id
+
+def update_chats(id, chat):
+    # param 1 > chat_old , param 2 > chat_new
+    collection = get_collection("chat")
+    current_app.logger.debug(id)
+    current_app.logger.debug(chat)
+    result = collection.update_one({"_id": ObjectId(id)},  { "$set": chat }, upsert=False)
+    return ObjectId(id)
+
+def delete_chat(id):
+    collection = get_collection("chat")
+    result = collection.delete_one({"_id": ObjectId(id)})
+    return ObjectId(id)
 
 def get_byID(id):
     collection = get_collection("chat")

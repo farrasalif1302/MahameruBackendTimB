@@ -36,7 +36,7 @@ def send_chat():
             return "Unable to send chat"
     except:
         return "check if the inputted data is correct"
-    
+
 @bp.route('/getchats')
 def chat_all():
     chats = get_byAll()
@@ -52,13 +52,24 @@ def chat_byID():
     resp = dumps(chats)
     return resp
 
-@bp.route('/deletechat', methods=['DELETE'])
-def delete_chat():
+@bp.route('/updatechat/<id>', methods = ['PUT'])
+def updatechat(id):
     form = request.form
-    chatID = form['_id']
-    conv = ObjectId(chatID)
-    chats = deletechat(conv)
-    resp = dumps(chats)
+    chat = {}
+    chat["message"] = form['message']
+    chat["update_at"] = datetime.datetime.now()
+
+    if form['message']:
+        _id = update_chats(id, chat)
+        resp = dumps(_id)
+        return resp
+    else:
+        return "Failed to update chat"
+
+@bp.route('/deletechat/<id>', methods=['DELETE'])
+def deletechat(id):
+    chat = delete_chat(id)
+    resp = dumps(chat)
     return resp
 
 if __name__ == "__main__":
