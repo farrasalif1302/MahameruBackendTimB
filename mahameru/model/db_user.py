@@ -28,9 +28,12 @@ def insert_user(user):
 
 def get_user_wID(id):
     collection = get_collection("user")
-    result = collection.find_one({'_id':ObjectId(id)})
-    resp = dumps(user)
+    result = collection.find_one({"_id": ObjectId(id)})
+    return collection.find(result)
 
+'''
+    Todo : Find duplicate update user function
+'''
 def update_users(id, user):
     # param 1 > user_old , param 2 > user_new
     collection = get_collection("user")
@@ -40,20 +43,14 @@ def update_users(id, user):
     result = collection.update_one({"_id": ObjectId(id)},  { "$set": user }, upsert=False)
     return result.matched_count
 
-def get_user(filter={}):
+def get_user(filter={}): 
     collection = get_collection("user")
     return collection.find(filter)
 
-def get_user(filter={}):
+
+def delete_user(id):
     collection = get_collection("user")
-    return collection.find_one(filter)
-
-
-   
-
-def delete_user(data):
-    collection = get_collection("user")
-    row = collection.delete_one(data)
-    return row
+    result = collection.delete_one({"_id": ObjectId(id)})
+    return  "user has been deleted"
 
     

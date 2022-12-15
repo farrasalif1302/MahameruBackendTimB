@@ -1,1 +1,1 @@
-rrent_app.config
+from .model.db_user import *

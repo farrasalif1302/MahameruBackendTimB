@@ -64,7 +64,7 @@ def update_channel(id):
         resp.status_code = 200
         return resp
     else:
-        return not_found()
+        return 
 
 '''
 Feedback : 

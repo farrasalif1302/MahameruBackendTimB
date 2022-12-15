@@ -14,7 +14,7 @@ bp = Blueprint('user', __name__,
     2. Untuk route ini pada key created_at dan updated_at digenerate oleh sistem
     '''
 
-@bp.route('/createuser',methods=['POST']) # KELAR
+@bp.route('/createuser', methods=['POST']) # KELAR
 def add_user():
     form = request.form
     user = {}
@@ -22,8 +22,8 @@ def add_user():
     user["nickname"] = form['nickname']
     user["notelp"] =form['notelp']
     user["pin"] = form['pin']
-    user["createdate"] = form['created_at'] # ini diganti jadi system yg ambil
-    user["contactid"] = form['contact_id']
+    user["createdate"] = form['createdate'] #konversi string ke timestamp
+    user["contactid"] = form['contact_id'] #jadikan objectid dari contact
 
     if request.method == "POST" and form['name']:
         _id = insert_user(user)
@@ -32,6 +32,7 @@ def add_user():
         return resp
     else:
         return "Unable to store data into database"
+
 
 '''
     Feedback : 
@@ -47,14 +48,14 @@ def add_user():
 '''
 
 @bp.route('/updateuser/<id>', methods = ['PUT'])
-def updateuser(id): # belum kelar, jsonify user_old sebagai param 1
+def updateuser(id): # kelar
     form = request.form
     user = {}
     user["name"] = form['name']
     user["nickname"] = form['nickname']
     user["notelp"] =form['notelp']
     user["pin"] = form['pin']
-    #user["updatedate"] = form['created_at'] # ini juga sistem yang input
+    user["updatedate"] = form['updatedate'] # konversi string ke timestamp
     #user["contactid"] = form['contact_id']
 
     #current_app.logger.debug(id)
@@ -78,8 +79,7 @@ def updateuser(id): # belum kelar, jsonify user_old sebagai param 1
 
 @bp.route('/users') #tampilin user (kelar)
 def user_all():
-    mongo = PyMongo(current_app)
-    user = mongo.db.user.find()
+    user = get_user()#buat route baru tipr "GET" yang mengembalikan seluruh kontak untuk user yang login sekarang (join 3 table : user, user.contact dan user)      
     resp = dumps(user)
     return resp
 
@@ -90,10 +90,10 @@ def user_all():
 
 @bp.route('/user/<id>') # tampilin user sesuai dengan user ID
 def user_one(id):
-    mongo = PyMongo(current_app)
-    user = mongo.db.user.find_one({'_id':ObjectId(id)})
+    user = get_user_wID(id)
     resp = dumps(user)
     return resp
+
 
 '''
     Feedback :
@@ -102,9 +102,6 @@ def user_one(id):
 '''
 @bp.route('/deleteuser/<id>',methods=['DELETE']) # hapus user sesuai dengan user ID
 def deleteuser(id):
-    mongo = PyMongo(current_app)
-    #app.logger.debug()
-    mongo.db.user.delete_one({'id':ObjectId(id)})
-    resp = jsonify("user deleted successfully")
-    resp.status_code = 200
+    user = delete_user(id)
+    resp = dumps(user)
     return resp

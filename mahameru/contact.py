@@ -1,98 +1,107 @@
-from flask import Flask, jsonify, request, current_app
-import uuid
-import datetime
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, request, jsonify
 from jinja2 import TemplateNotFound
-from .model.db import *
+from .model.db_contact import *
+from bson.json_util import dumps
+from flask_pymongo import PyMongo
+from bson.objectid import ObjectId
 
-contact = Blueprint('contact', __name__,
+bp = Blueprint('contact', __name__,
                         template_folder='templates')
 
 '''
-    Feedback :
-    1. Seluruh kode, routes, dan fungsi belum terkoneksi dengan database
-    2. perbaiki source code sesuai dengan fungsionalitas yang diinginkan
+    Feedback : 
+    1. Check database diagram, field yg wajib diisi
+    2. Untuk route ini pada key created_at dan updated_at digenerate oleh sistem
+    '''
+
+@bp.route('/createcontact',methods=['POST']) # KELAR
+def add_contact():
+    form = request.form
+    contact = {}
+    contact["name"] = form['name']
+    contact["nickname"] = form['nickname']
+    contact["notelp"] =form['notelp']
+    contact["pin"] = form['pin']
+    #contact["createdate"] = form['created_at'] # ini diganti jadi system yg ambil
+    #contact["contactid"] = form['contact_id']
+
+    if form['name']:
+        count = insert_contact(contact)
+        resp = dumps(count)
+        current_app.logger.debug(count)
+        return resp
+    else:
+        return "Unable to store data into database"
+
+
+'''
+    Feedback : 
+    1. Check database diagram, field yg wajib diisi
+    2. Untuk route ini pada key created_at dan updated_at digenerate oleh sistem
+    3. Akses ke database untuk simpan data seharusnya dipisahkan kedalam file terpisah
+    4. Konfiguras baca dari settings.cfg
+    5. Pada kondisi " if " pastikan checking kondisinya benar
+    6. Kembalikan ObjectID untuk row yang berhasil di update sebagai json
+    7. Nama route ubah ke updatecontact untuk mencerminkan tujuan
+    8. Field updated_at ditarik dari datesystem tanpa menyentuh existing data di field created_at
+    
 '''
 
-@contact.route('/get', methods=['GET'])
-def getcontact():
-    try:
-        current_app.logger.debug("test")
-        contact = {}
-        contact['contactid'] = 3
-        contact['name'] = 'Daniella'
-        contact['no_telp'] = '6287885728208'
-        contact['pin'] = '1234'
-        contact['created_at'] = '12/2/2022'
-        contact['updated_at'] = ''
-        contact['contact_id'] = 2
-        current_app.logger.debug(contact)
-        response = jsonify(contact)
-        response.status_code = 200
-    except Exception as e:
-        print(e)
-        response = jsonify({'message': 'Failed to create contact'})
-        response.status_code = 400
-    finally:
-        return response
+@bp.route('/updatecontact/<id>', methods = ['PUT'])
+def updatecontact(id): # kelar
+    form = request.form
+    contact = {}
+    contact["name"] = form['name']
+    contact["nickname"] = form['nickname']
+    contact["notelp"] =form['notelp']
+    contact["pin"] = form['pin']
+    #contact["updatedate"] = form['created_at'] # ini juga sistem yang input
+    #contact["contactid"] = form['contact_id']
+
+    #current_app.logger.debug(id)
 
 
-# TODO : fix this so it match with the given docs
-@contact.route('/createcontact', methods=['POST'])
-def createcontact():
-    try:
-        contact['name'] = request.json['contact']
-        contact['no_telp'] = request.json['no_telp']
-        contact['pin'] = request.json['pin']
-        contact['created_at'] = request.json['created_at']
-        contact['updated_at'] = request.json['updated_at']
-        contact['contactid'] = uuid.uuid4()
+    if form['name']:
+        count = update_contacts(id, contact) # db_contact belum benar
+       
+        #current_app.logger.debug(_id)
+        return str(count)
+        #return
+    else:
+        return "Failed to update contact"
 
-        response = jsonify({'id' : contact['contactid']})
-        response.status_code = 200
-    except Exception as e:
-        print(e)
-        response = jsonify({'message' : 'Failed to create channnel'})
-        response.status_code = 400
-    finally:
-        return response
 
-# TODO : dont modify it unt ill the above route is fixed
-@contact.route('/createcontact', methods=['PUT'])
-def editcontact():
-    try:
-        contact['contactid'] = request.json['contactid']
-        contact['name'] = request.json['name']
-        contact['no_telp'] = request.json['no_telp']
-        contact['pin'] = request.json['pin']
-        contact['updated_at'] = request.json['updated_at']
+'''
+    Feedback :
+    1. nama route ganti ke /contacts
+    2. Jika tidak ada contact yg ditemukan, kembalikan string "Tidak ada contact"
+'''
 
-        response = jsonify({'id' : contact['contactid']})
-        response.status_code = 200
-    except Exception as e:
-        print(e)
-        response = jsonify({'message': 'Failed to create contact'})
-        response.status_code = 400
-    finally:
-        return 'page not found'
+@bp.route('/contacts') #tampilin contact (kelar)
+def contact_all():
+    contact = get_contact()       
+    resp = dumps(contact)
+    return resp
 
-@contact.route('/createcontact/<string:contact_id>', methods=['GET'])
-def newcontact(contact_id): #/createcontact/2c535c8b-5d2b-4a72-9268-1c83aaf61902
-    try:
-        # ini bisa.
-        if contact_id == '2c535c8b-5d2b-4a72-9268-1c83aaf61902':
-            response = jsonify({'contact': 'Daniella'})
-            response.status_code = 200
-    except Exception as e:
-        print(e)
-        response = jsonify({'message' : 'Failed to get contact'})
-        response.status_code = 400
-    finally:
-        return 'page not found'
+'''
+    Feedback :
+    1. Jika tidak ada contact yg ditemukan, kembalikan string "Tidak ada contact dengan objectID yang dicari"
+'''
 
-@contact.route('/contact', methods=['DELETE'])
-def deletecontact():
-    return jsonify({'mesage' : 'deleting the contact that you want'})
+@bp.route('/contact/<id>') # tampilin contact sesuai dengan contact ID
+def contact_one(id):
+    contact = get_contact_wID(id)
+    resp = dumps(contact)
+    return resp
 
-if __name__ == "__main__":
-    contact.run(debug=True)
+
+'''
+    Feedback :
+    1. Nama route ganti ke /deletecontact
+    2. check filter query delete row karena row yang diingikan tidak terhapus
+'''
+@bp.route('/deletecontact/<id>',methods=['DELETE']) # hapus contact sesuai dengan contact ID
+def deletecontact(id):
+    contact = delete_contact(id)
+    resp = dumps(contact)
+    return resp

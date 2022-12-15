@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from .model import db
+from .model import db_contact
 from . import user
 # file ini udah bener
 
@@ -16,7 +16,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    db.init_app(app)
+    db_contact.init_app(app)
 
     @app.route('/')
     def index():
