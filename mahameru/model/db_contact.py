@@ -1,5 +1,7 @@
 import click
 import pymongo
+from bson.json_util import dumps
+from bson.objectid import ObjectId 
 from flask import current_app, g
 from flask.cli import with_appcontext
 
@@ -22,18 +24,25 @@ def get_contact(filter={}):
     collection = get_collection("contact")
     return collection.find(filter)
 
-def get_contact(filter={}):
-    collection = get_collection("contact")
-    return collection.find_one(filter)
+def get_contact_wID(id):
+    collection = get_collection("user")
+    result = collection.find_one({"_id": ObjectId(id)})
+    return collection.find(result)
 
-def insert_contact(data):
+def insert_contact(contact):
     collection = get_collection("contact")
-    row = collection.insert_one(data)
-    return row
+    result = collection.insert_one(contact)
+    return result.inserted_id
 
-def update_contact(filter, update):
-    collection = get_collection("contact")    
-    return collection.update_one(filter, update, upsert=False)    
+
+def update_contact(id, contact):
+    # param 1 > user_old , param 2 > user_new
+    collection = get_collection("contact")
+    current_app.logger.debug(id)
+    current_app.logger.debug(contact)
+   
+    result = collection.update_one({"_id": ObjectId(id)},  { "$set": contact }, upsert=False)
+    return result.matched_count    
 
 def delete_contact(data):
     collection = get_collection("contact")

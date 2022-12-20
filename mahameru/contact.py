@@ -4,6 +4,7 @@ from .model.db_contact import *
 from bson.json_util import dumps
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+import datetime
 
 bp = Blueprint('contact', __name__,
                         template_folder='templates')
@@ -21,14 +22,13 @@ def add_contact():
     contact["name"] = form['name']
     contact["nickname"] = form['nickname']
     contact["notelp"] =form['notelp']
-    contact["pin"] = form['pin']
-    #contact["createdate"] = form['created_at'] # ini diganti jadi system yg ambil
+    contact["createdate"] = datetime.datetime.now() #konversi string ke timestamp
     #contact["contactid"] = form['contact_id']
 
     if form['name']:
-        count = insert_contact(contact)
-        resp = dumps(count)
-        current_app.logger.debug(count)
+        _id = insert_contact(contact)
+        resp = dumps(_id)
+        current_app.logger.debug(_id)
         return resp
     else:
         return "Unable to store data into database"
@@ -55,14 +55,14 @@ def updatecontact(id): # kelar
     contact["nickname"] = form['nickname']
     contact["notelp"] =form['notelp']
     contact["pin"] = form['pin']
-    #contact["updatedate"] = form['created_at'] # ini juga sistem yang input
+    contact["createdate"] = datetime.datetime.now() #konversi string ke timestamp
     #contact["contactid"] = form['contact_id']
 
     #current_app.logger.debug(id)
 
 
     if form['name']:
-        count = update_contacts(id, contact) # db_contact belum benar
+        count = update_contact(id, contact) # db_contact belum benar
        
         #current_app.logger.debug(_id)
         return str(count)

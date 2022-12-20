@@ -63,10 +63,10 @@ def updateuser(id): # kelar
 
 
     if form['name']:
-        count = update_users(id, user) # db_user belum benar
-       
+        _id = update_users(id, user) # db_user belum benar
+        resp = dumps(_id)
         #current_app.logger.debug(_id)
-        return str(count)
+        return resp
         #return
     else:
         return "Failed to update user"
