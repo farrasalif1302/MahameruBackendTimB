@@ -4,6 +4,7 @@ from .model.db_user import *
 from bson.json_util import dumps
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+import datetime
 
 bp = Blueprint('user', __name__,
                         template_folder='templates')
@@ -22,7 +23,7 @@ def add_user():
     user["nickname"] = form['nickname']
     user["notelp"] =form['notelp']
     user["pin"] = form['pin']
-    user["createdate"] = form['createdate'] #konversi string ke timestamp
+    user["createdate"] = datetime.datetime.now() #konversi string ke timestamp
     user["contactid"] = form['contact_id'] #jadikan objectid dari contact
 
     if request.method == "POST" and form['name']:
@@ -55,17 +56,17 @@ def updateuser(id): # kelar
     user["nickname"] = form['nickname']
     user["notelp"] =form['notelp']
     user["pin"] = form['pin']
-    user["updatedate"] = form['updatedate'] # konversi string ke timestamp
+    user["updatedate"] = datetime.datetime.now() # konversi string ke timestamp
     #user["contactid"] = form['contact_id']
 
     #current_app.logger.debug(id)
 
 
     if form['name']:
-        count = update_users(id, user) # db_user belum benar
-       
+        _id = update_users(id, user) # db_user belum benar
+        resp = dumps(_id)
         #current_app.logger.debug(_id)
-        return str(count)
+        return resp
         #return
     else:
         return "Failed to update user"
@@ -105,3 +106,8 @@ def deleteuser(id):
     user = delete_user(id)
     resp = dumps(user)
     return resp
+
+
+    '''
+    buat web API untuk cek duplicate nickname atau phone number, ketika user register
+    '''
