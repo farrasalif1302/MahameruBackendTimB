@@ -1,0 +1,13 @@
+web api return ocbject id ocntact denga memasukkan username(nickname)
+
+WEB API yang return list dari complete nickname given partial nickname 
+
+buat web API untuk cek duplicate nickname atau phone number, ketika user register
+
+buat web API untuk return nickname given objectID dan sebaliknya
+
+di table user tidak perlu ada contact_id 
+
+di table user_contact buat user_id2
+
+buat web API listing friend given user_id atau nickname (harus join antara table user dan user_contact)
