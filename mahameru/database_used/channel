@@ -1,0 +1,57 @@
+[{
+  "_id": {
+    "$oid": "638e0c65515c43528d54962e"
+  },
+  "name": "ADIT",
+  "desc": "iINI TEST MALEM",
+  "owner_id": "2",
+  "members_id": [
+    "1",
+    "1",
+    "4"
+  ],
+  "description": "iINI TEST BENGI BENGI",
+  "owner_id:": "123"
+},{
+  "_id": {
+    "$oid": "63a426020c00d90da4c1ec6a"
+  },
+  "name": "Maha",
+  "desc": "iINI TEST MALEM",
+  "owner_id": "2",
+  "members_id": [
+    "1",
+    "1",
+    "4"
+  ],
+  "description": "iINI TEST BENGI BENGI",
+  "owner_id:": "123"
+},{
+  "_id": {
+    "$oid": "63a426070c00d90da4c1ec6b"
+  },
+  "name": "Meru",
+  "desc": "KUWEK",
+  "owner_id": "2",
+  "members_id": [
+    "1",
+    "1",
+    "4"
+  ],
+  "description": "iINI TEST BENGI BENGI",
+  "owner_id:": "123"
+},{
+  "_id": {
+    "$oid": "63a426100c00d90da4c1ec6c"
+  },
+  "name": "DDP",
+  "desc": "NOel",
+  "owner_id": "2",
+  "members_id": [
+    "1",
+    "1",
+    "4"
+  ],
+  "description": "iINI TEST BENGI BENGI",
+  "owner_id:": "123"
+}]
