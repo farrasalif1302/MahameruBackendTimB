@@ -18,24 +18,23 @@ def get_chats():
 
 @bp.route('/sendchat', methods=['POST'])
 def send_chat():
-    try:
-        date = datetime.datetime.now()
-        date_time = date.strftime("%m/%d/%Y, %H:%M:%S")
-        json = request.json 
-        telp = json['telp']
-        from_user = json['from_user']
-        message = json['message']
-        sent = date_time
+    date = datetime.datetime.now()
+    date_time = date.strftime("%m/%d/%Y, %H:%M:%S")
+    json = request.json 
+    telp = json['telp']
+    from_user = json['from_user']
+    message = json['message']
+    sent = date_time
 
-        if request.method == "POST":
-            _id = sendchat(telp, from_user, message, sent)
-            resp = dumps(_id)
-            current_app.logger.debug(_id)
-            return resp
-        else:
-            return "Unable to send chat"
-    except:
-        return "check if the inputted data is correct"
+    if request.method == "POST":
+        _id = sendchat(telp, from_user, message, sent)
+        resp = dumps(_id)
+        current_app.logger.debug(_id)
+        return resp
+    else:
+        return "Unable to send chat"
+    # except:
+    #     return "failed to send chat"
 
 @bp.route('/getchat/id')
 def chatbyID():

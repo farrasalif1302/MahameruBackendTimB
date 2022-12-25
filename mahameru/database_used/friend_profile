@@ -1,0 +1,19 @@
+[{
+  "_id": {
+    "$oid": "63a575e1381277a6d7336e41"
+  },
+  "user_id": {
+    "$oid": "63a57ff9381277a6d7336e4d"
+  },
+  "phone_number": "0878003",
+  "nama": "Fahreza Dhia"
+},{
+  "_id": {
+    "$oid": "63a866c455b13652932dd061"
+  },
+  "user_id": {
+    "$oid": "63a2d89d7fe1f6620c1340a6"
+  },
+  "phone_number": "0878001",
+  "nama": "Yohanes"
+}]

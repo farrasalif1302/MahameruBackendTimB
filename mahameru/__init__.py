@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from bson.json_util import dumps
-from . import user
+#from . import user
 from . import chat
 
 
@@ -9,7 +9,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     
     app.config.from_pyfile('settings.cfg', silent=True)
-    app.register_blueprint(user.bp)
+    #app.register_blueprint(user.bp)
     app.register_blueprint(chat.bp)
 
     try:

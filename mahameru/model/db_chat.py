@@ -25,15 +25,15 @@ def idmatch(data):
     return data
 
 def number_match(number):
-    col = get_collection("user")
-    pipeline = [{"$match" : {"notelp" : number}}, {"$lookup" : {"from" : "friend_profile", "localField" : '_id', "foreignField" : 'user_id', "as" : 'friend data'}}]
+    col = get_collection("friend_profile")
+    pipeline = [{"$match" : {"phone_number" : number}}, {"$lookup" : {"from" : "user", "localField" : 'user_id', "foreignField" : '_id', "as" : 'friend data'}}]
     data = col.aggregate(pipeline)
     data_list = list(data)
     a = data_list[0]
-    current_app.logger.debug(a)
     b = a['friend data'][0]
+    current_app.logger.debug(a)
     current_app.logger.debug(b)
-    if a['notelp'] == b["phone_number"]:
+    if a['phone_number'] == b["notelp"]:
         current_app.logger.debug("masuk ke if")
         status = "1"
     else:
@@ -43,7 +43,6 @@ def number_match(number):
     
 def sendchat(telp, from_user, message, created_at):
     collection = get_collection("chat")
-    current_app.logger.debug("Manggil function")
     a = number_match(telp)
     if a == '1':
         result = collection.insert_one({"telp" : telp, "from_user" : from_user, "message" : message, "sent" : created_at, "status" : True})

@@ -1,29 +1,22 @@
 [{
   "_id": {
-    "$oid": "6396df42ccf199115c856dc8"
-  },
-  "name": "Faizal Rizqi",
-  "nickname": "Faizal112",
-  "notelp": "0899999f"
-},{
-  "_id": {
-    "$oid": "63a2d8657fe1f6620c1340a5"
-  },
-  "name": "Fahreza Dhia",
-  "nickname": "Satria Cahaya",
-  "notelp": "0899999f"
-},{
-  "_id": {
     "$oid": "63a2d89d7fe1f6620c1340a6"
   },
   "name": "Yohanes Kukuh",
   "nickname": "Rohan229",
-  "notelp": "0899999f"
+  "notelp": "0878009"
 },{
   "_id": {
     "$oid": "63a2d8b17fe1f6620c1340a7"
   },
   "name": "Andreas",
   "nickname": "Andrea221",
-  "notelp": "0899999f"
+  "notelp": "0878002"
+},{
+  "_id": {
+    "$oid": "63a57ff9381277a6d7336e4d"
+  },
+  "name": "Fahreza Dhia",
+  "nickname": "Reza",
+  "notelp": "0878003"
 }]
