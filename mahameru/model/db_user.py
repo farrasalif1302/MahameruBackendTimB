@@ -22,6 +22,7 @@ Helper function to query all contact on system
 """
 def insert_user(user):
     collection = get_collection("user")
+
     #_id = mongo.db.user.insert_one({"userid": _userid, "name": _name, "nickname": _nickname ,"notelp": _notelp, "pin" : _pin, "created_at" : createdat,  "contact_id" : contactid })
     result = collection.insert_one(user)
     return result.inserted_id
@@ -30,6 +31,24 @@ def get_user_wID(id):
     collection = get_collection("user")
     result = collection.find_one({"_id": ObjectId(id)})
     return collection.find(result)
+
+def get_user_by_nickname(nickname):
+    collection = get_collection("user")
+    # Build the query dictionary using the nickname parameter
+    query = {'nickname': nickname}
+    # Query the database for documents that match the query
+    result = collection.find(query)
+    return result
+
+def get_user_by_partial_nickname(nickname):
+    collection = get_collection("user")
+    query = {"nickname": {"$regex": "^" + nickname, "$options": "i"}}
+    cursor = collection.find(query)
+    return cursor
+
+
+
+
 
 '''
     Todo : Find duplicate update user function
@@ -52,5 +71,6 @@ def delete_user(id):
     collection = get_collection("user")
     result = collection.delete_one({"_id": ObjectId(id)})
     return  "user has been deleted"
+
 
     

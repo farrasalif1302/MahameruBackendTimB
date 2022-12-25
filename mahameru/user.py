@@ -4,7 +4,10 @@ from .model.db_user import *
 from bson.json_util import dumps
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+from flask import jsonify
+import json
 import datetime
+from flask import make_response
 
 bp = Blueprint('user', __name__,
                         template_folder='templates')
@@ -14,6 +17,27 @@ bp = Blueprint('user', __name__,
     1. Check database diagram, field yg wajib diisi
     2. Untuk route ini pada key created_at dan updated_at digenerate oleh sistem
     '''
+
+@bp.route('/registuser', methods=['POST'])
+def regis_user():
+    form = request.form
+    user = {}
+    user["name"] = form['name']
+    user["nickname"] = form['nickname']
+    user["notelp"] =form['notelp']
+
+    # Check if a user with the same nickname already exists
+    duplicate = get_user({'nickname': form['nickname']})
+    if duplicate:
+        # Return a response indicating that the nickname is already taken
+        return {'message': 'Username already taken'}, 400
+    else:
+        # Insert the new user into the database
+        _id = insert_user(user)
+        resp = dumps(_id)
+        current_app.logger.debug(_id)
+        return resp
+
 
 @bp.route('/createuser', methods=['POST']) # KELAR
 def add_user():
@@ -96,6 +120,36 @@ def user_one(id):
     return resp
 
 
+
+@bp.route('/getuser/<nickname>', methods=['GET'])
+def get_user23(nickname):
+    result = get_user_by_nickname(nickname)
+    if result:
+        # Extract the data from each document in the Cursor object and convert ObjectId objects to strings
+        result_list = [{k: (str(v) if isinstance(v, ObjectId) else v) for k, v in doc.items()} for doc in result]
+        # Use the jsonify function to convert the result list to a JSON string and return it as a bytes object
+        return jsonify(result_list)
+    else:
+        return "No matching documents found"
+
+
+@bp.route('/getuser/<nickname>', methods=['GET'])
+def get_user_by_nickname(nickname):
+    result = get_user_by_partial_nickname(nickname)
+    if result:
+        # Convert ObjectId objects to strings
+        result_list = [{k: (str(v) if isinstance(v, ObjectId) else v) for k, v in doc.items()} for doc in result]
+        return result_list
+    else:
+        return "No matching documents found"
+
+
+
+
+
+
+
+
 '''
     Feedback :
     1. Nama route ganti ke /deleteuser
@@ -108,6 +162,6 @@ def deleteuser(id):
     return resp
 
 
-    '''
+'''
     buat web API untuk cek duplicate nickname atau phone number, ketika user register
     '''
