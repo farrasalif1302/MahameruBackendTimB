@@ -4,6 +4,7 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId 
 from flask import current_app, g
 from flask.cli import with_appcontext
+from pymongo import MongoClient
 
 
 def get_db():
@@ -20,12 +21,19 @@ def get_collection(colname):
 """
 Helper function to query all contact on system 
 """
+
 def insert_user(user):
     collection = get_collection("user")
 
     #_id = mongo.db.user.insert_one({"userid": _userid, "name": _name, "nickname": _nickname ,"notelp": _notelp, "pin" : _pin, "created_at" : createdat,  "contact_id" : contactid })
     result = collection.insert_one(user)
     return result.inserted_id
+
+def user_exists(nickname):
+    collection = get_collection("user")
+    # Query the database to see if a user with the given nickname already exists
+    result = collection.find_one({"nickname": nickname})
+    return result is not None
 
 def get_user_wID(id):
     collection = get_collection("user")
@@ -45,6 +53,14 @@ def get_user_by_partial_nickname(nickname):
     query = {"nickname": {"$regex": "^" + nickname, "$options": "i"}}
     cursor = collection.find(query)
     return cursor
+
+def get_user_by_phoneno(phoneno):
+    collection = get_collection("user")
+    # Build the query dictionary using the nickname parameter
+    query = {'notelp': phoneno}
+    # Query the database for documents that match the query
+    result = collection.find(query)
+    return result
 
 
 
