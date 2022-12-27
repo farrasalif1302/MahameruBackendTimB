@@ -4,6 +4,7 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId 
 from flask import current_app, g
 from flask.cli import with_appcontext
+from itertools import chain
 
 
 def get_db():
@@ -27,6 +28,12 @@ def insert_user(user):
     result = collection.insert_one(user)
     return result.inserted_id
 
+def user_exists(nickname):
+    collection = get_collection("user")
+    # Query the database to see if a user with the given nickname already exists
+    result = collection.find_one({"nickname": nickname})
+    return result is not None
+
 def get_user_wID(id):
     collection = get_collection("user")
     result = collection.find_one({"_id": ObjectId(id)})
@@ -41,10 +48,15 @@ def get_user_by_nickname(nickname):
     return result
 
 def get_user_by_partial_nickname(nickname):
-    collection = get_collection("user")
-    query = {"nickname": {"$regex": "^" + nickname, "$options": "i"}}
-    cursor = collection.find(query)
-    return cursor
+    collection_user = get_collection("user")
+    collection_contact = get_collection("contact")
+    query = {"$or": [
+        {"nickname": {"$regex": "^" + nickname, "$options": "i"}},
+        {"nickname": {"$regex": "^" + nickname, "$options": "i"}}
+    ]}
+    cursor = collection_user.find(query)
+    cursor_contact = collection_contact.find(query)
+    return chain(cursor, cursor_contact)
 
 
 

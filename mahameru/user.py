@@ -18,25 +18,27 @@ bp = Blueprint('user', __name__,
     2. Untuk route ini pada key created_at dan updated_at digenerate oleh sistem
     '''
 
-@bp.route('/registuser', methods=['POST'])
-def regis_user():
+@bp.route('/register', methods=['POST'])
+def register_user():
     form = request.form
     user = {}
     user["name"] = form['name']
     user["nickname"] = form['nickname']
     user["notelp"] =form['notelp']
+    user["createdate"] = datetime.datetime.now() #konversi string ke timestamp
 
-    # Check if a user with the same nickname already exists
-    duplicate = get_user({'nickname': form['nickname']})
-    if duplicate:
-        # Return a response indicating that the nickname is already taken
-        return {'message': 'Username already taken'}, 400
+    if request.method == "POST" and form['name']:
+        if user_exists(user["nickname"]):
+            # A user with the same nickname already exists, so return an error message
+            return "Error: User with nickname already exists"
+        else:
+            # The nickname is unique, so insert the new user into the database
+            _id = insert_user(user)
+            resp = dumps(_id)
+            current_app.logger.debug(_id)
+            return resp
     else:
-        # Insert the new user into the database
-        _id = insert_user(user)
-        resp = dumps(_id)
-        current_app.logger.debug(_id)
-        return resp
+        return "Unable to store data into database"
 
 
 @bp.route('/createuser', methods=['POST']) # KELAR
