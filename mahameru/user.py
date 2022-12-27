@@ -144,12 +144,6 @@ def get_user_by_nickname(nickname):
         return "No matching documents found"
 
 
-
-
-
-
-
-
 '''
     Feedback :
     1. Nama route ganti ke /deleteuser
