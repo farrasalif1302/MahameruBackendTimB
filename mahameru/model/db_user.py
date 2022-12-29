@@ -4,7 +4,7 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId 
 from flask import current_app, g
 from flask.cli import with_appcontext
-from pymongo import MongoClient
+from itertools import chain
 
 
 def get_db():
@@ -21,7 +21,6 @@ def get_collection(colname):
 """
 Helper function to query all contact on system 
 """
-
 def insert_user(user):
     collection = get_collection("user")
 
@@ -49,18 +48,15 @@ def get_user_by_nickname(nickname):
     return result
 
 def get_user_by_partial_nickname(nickname):
-    collection = get_collection("user")
-    query = {"nickname": {"$regex": "^" + nickname, "$options": "i"}}
-    cursor = collection.find(query)
-    return cursor
-
-def get_user_by_phoneno(phoneno):
-    collection = get_collection("user")
-    # Build the query dictionary using the nickname parameter
-    query = {'notelp': phoneno}
-    # Query the database for documents that match the query
-    result = collection.find(query)
-    return result
+    collection_user = get_collection("user")
+    collection_contact = get_collection("contact")
+    query = {"$or": [
+        {"nickname": {"$regex": "^" + nickname, "$options": "i"}},
+        {"nickname": {"$regex": "^" + nickname, "$options": "i"}}
+    ]}
+    cursor = collection_user.find(query)
+    cursor_contact = collection_contact.find(query)
+    return chain(cursor, cursor_contact)
 
 
 
