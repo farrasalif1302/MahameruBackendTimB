@@ -134,7 +134,7 @@ def get_user23(nickname):
 
 
 @bp.route('/getuser/<nickname>', methods=['GET'])
-def getuserbynickname(nickname):
+def get_user_bynickname(nickname):
     result = get_user_by_partial_nickname(nickname)
     if result:
         # Convert ObjectId objects to strings
@@ -153,8 +153,6 @@ def getuserbyphoneno(phoneno):
         return jsonify(result_list)
     else:
         return "No matching documents found"
-
-
 
 
 '''
