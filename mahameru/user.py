@@ -18,7 +18,6 @@ bp = Blueprint('user', __name__,
     2. Untuk route ini pada key created_at dan updated_at digenerate oleh sistem
     '''
 
-
 @bp.route('/register', methods=['POST'])
 def register_user():
     form = request.form
@@ -41,6 +40,7 @@ def register_user():
     else:
         return "Unable to store data into database"
 
+
 @bp.route('/createuser', methods=['POST']) # KELAR
 def add_user():
     form = request.form
@@ -48,6 +48,7 @@ def add_user():
     user["name"] = form['name']
     user["nickname"] = form['nickname']
     user["notelp"] =form['notelp']
+    user["pin"] = form['pin']
     user["createdate"] = datetime.datetime.now() #konversi string ke timestamp
     user["contactid"] = form['contact_id'] #jadikan objectid dari contact
 
@@ -80,6 +81,7 @@ def updateuser(id): # kelar
     user["name"] = form['name']
     user["nickname"] = form['nickname']
     user["notelp"] =form['notelp']
+    user["pin"] = form['pin']
     user["updatedate"] = datetime.datetime.now() # konversi string ke timestamp
     #user["contactid"] = form['contact_id']
 
@@ -134,23 +136,12 @@ def get_user23(nickname):
 
 
 @bp.route('/getuser/<nickname>', methods=['GET'])
-def get_user_bynickname(nickname):
+def get_user_by_nickname(nickname):
     result = get_user_by_partial_nickname(nickname)
     if result:
         # Convert ObjectId objects to strings
         result_list = [{k: (str(v) if isinstance(v, ObjectId) else v) for k, v in doc.items()} for doc in result]
         return result_list
-    else:
-        return "No matching documents found"
-
-
-@bp.route('/getuser/<notelp>', methods=['GET'])
-def getuserbyphoneno(phoneno):
-    result = get_user_by_phoneno(phoneno)
-    if result:
-        # Convert ObjectId objects to strings
-        result_list = [{k: (str(v) if isinstance(v, ObjectId) else v) for k, v in doc.items()} for doc in result]
-        return jsonify(result_list)
     else:
         return "No matching documents found"
 
