@@ -2,6 +2,8 @@ import os
 from flask import Flask
 from .model import db_channel
 from . import channel
+from . import user
+from . import contact
 # file ini udah bener
 
 def create_app(test_config=None):
@@ -9,6 +11,8 @@ def create_app(test_config=None):
     
     app.config.from_pyfile('settings.cfg', silent=True)
     app.register_blueprint(channel.bp)
+    app.register_blueprint(user.bp)
+    app.register_blueprint(contact.bp)
 
     
     try:
