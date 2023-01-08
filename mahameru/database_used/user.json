@@ -1,0 +1,95 @@
+[{
+  "_id": {
+    "$oid": "638e4948ac1e4736290827e5"
+  },
+  "userid": "1",
+  "name": "sasasasa",
+  "nickname": "dsadsad",
+  "notelp": "09871621521ddsadsa",
+  "pin": "726621621asa",
+  "created_at": "11/22/2020",
+  "contact_id": "1",
+  "updatedate": {
+    "$date": {
+      "$numberLong": "1671743252007"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "638e4a53875c3843f15e38dd"
+  },
+  "userid": "2",
+  "name": "Adit",
+  "nickname": "HakiruKamiZX",
+  "notelp": "08127654321",
+  "pin": "654321",
+  "created_at": "09/12/2021",
+  "contact_id": "2"
+},{
+  "_id": {
+    "$oid": "639677f5e5ae61fafd2c45d8"
+  },
+  "userid": "7",
+  "name": "Fahreza",
+  "nickname": "FahrezzaDhia",
+  "notelp": "089765432176",
+  "pin": "123456"
+},{
+  "_id": {
+    "$oid": "63967ff1173bb079635675c4"
+  },
+  "name": "Farras",
+  "nickname": "Faras12121",
+  "notelp": "089765432121",
+  "pin": "123652",
+  "createdate": "20/20/2020",
+  "contactid": "2"
+},{
+  "_id": {
+    "$oid": "639688ec173bb079635675c6"
+  },
+  "name": "Faaasas",
+  "nickname": "Faras12121dsadsad",
+  "notelp": "089765432121192912",
+  "pin": "123652312312",
+  "createdate": "20/20/2020",
+  "contactid": "4"
+},{
+  "_id": {
+    "$oid": "63a289493cde3aec50fa7af6"
+  },
+  "name": "Faaasas",
+  "nickname": "Masmas",
+  "notelp": "0182721621",
+  "pin": "3213123",
+  "createdate": {
+    "$date": {
+      "$numberLong": "1671621561022"
+    }
+  },
+  "contactid": "44"
+},{
+  "_id": {
+    "$oid": "63aaead7260c2464be1c755c"
+  },
+  "name": "Faaasas",
+  "nickname": "sas",
+  "notelp": "0182721621",
+  "createdate": {
+    "$date": {
+      "$numberLong": "1672170823699"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63aaefd6a22978c89dea96df"
+  },
+  "name": "Faaasas",
+  "nickname": "Masmasa",
+  "notelp": "0182721621",
+  "createdate": {
+    "$date": {
+      "$numberLong": "1672172102433"
+    }
+  }
+}]

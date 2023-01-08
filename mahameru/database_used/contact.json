@@ -1,0 +1,34 @@
+[{
+  "_id": {
+    "$oid": "63b6b93be519f4ad2100ec83"
+  },
+  "name": "Adit",
+  "notelp": "087884899433",
+  "createdate": {
+    "$date": {
+      "$numberLong": "1672944555186"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63ba441be27d79109b21def7"
+  },
+  "name": "Farras",
+  "notelp": "087865432113",
+  "createdate": {
+    "$date": {
+      "$numberLong": "1673176714999"
+    }
+  }
+},{
+  "_id": {
+    "$oid": "63ba4425e27d79109b21def9"
+  },
+  "name": "Fahreza",
+  "notelp": "081276543213",
+  "createdate": {
+    "$date": {
+      "$numberLong": "1673176725875"
+    }
+  }
+}]
