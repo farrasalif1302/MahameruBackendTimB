@@ -16,19 +16,21 @@ def get_chats():
     result = dumps(chats)
     return result
 
+#.strftime("%m/%d/%Y, %H:%M:%S")
 @bp.route('/sendchat', methods=['POST'])
 def send_chat():
     date = datetime.datetime.now()
     date_time = date.strftime("%m/%d/%Y, %H:%M:%S")
     json = request.json 
-    telp = json['telp']
-    from_user = json['from_user']
+    to_telp = json['to_telp']
+    from_telp = json['from_telp']
     message = json['message']
     sent = date_time
 
     if request.method == "POST":
-        _id = sendchat(telp, from_user, message, sent)
-        resp = dumps(_id)
+        _id = sendchat(to_telp, from_telp, message, sent)
+        chat = dumps(_id)
+        resp = "chat _id : " + chat
         current_app.logger.debug(_id)
         return resp
     else:
@@ -36,19 +38,16 @@ def send_chat():
     # except:
     #     return "failed to send chat"
 
-@bp.route('/getchat/id')
-def chatbyID():
-    chat = request.json
-    conv = ObjectId(chat)
+@bp.route('/getchat/id/<id>')
+def chatbyID(id):
+    conv = ObjectId(id)
     chats = getbyID(conv)
     resp = dumps(chats)
     return resp
 
-@bp.route('/getchat/nickname')
-def chat_byID():
-    nick = {}
-    nick['nickname'] = request.json['nickname']
-    chats = get_byNick(nick['nickname'])
+@bp.route('/getchat/nick/<nickname>')
+def chat_byNickname(nickname):
+    chats = get_byNick(nickname)
     resp = dumps(chats)
     return resp
 
@@ -72,33 +71,54 @@ def deletechat(id):
     resp = dumps(chat)
     return resp
 
-@bp.route('/channelmessages/id', methods=['GET'])
-def listchannels():
-    json = request.json
-    channel = json['_id']
-    conv = ObjectId(channel)
+@bp.route('/channelmessages/<id>', methods=['GET'])
+def listchannels(id):
+    conv = ObjectId(id)
     chats = get_channel_messages(conv)
     answer = dumps(chats)
     return answer
 
-@bp.route('/getpersonalchat/id', methods=['GET'])
-def get_personal_id():
-    json = request.json
-    to_user = ObjectId(json['to_user'])
-    from_user = ObjectId(json['from_user'])
-    chats = get_personalChat_id(to_user, from_user)
-    answer = dumps(chats)
-    return answer
+# ini untuk diplay message pada messaging system
+# a = from_telp. input sendiri (logged in user)
+# <telp> itu chat dengan
+@bp.route('/chatwith/<telp>')
+def get_personal_telp(telp):
+    a = '0878003'
+    to_telp = telp
+    from_telp = a
+    chats = get_chatwith_telp(to_telp, from_telp)
+    resp = dumps(chats)
+    return resp
 
-@bp.route('/getpersonalchat/text', methods=['GET'])
-def get_personal_text():
-    json = request.json
-    to_user = json['to_user']
-    message = json['message']
-    toID = ObjectId(to_user)
-    chats = get_personalChat_text(toID, message)
-    answer = dumps(chats)
-    return answer
+# @bp.route('/getinfo/<val>')
+# def find_info(val):
+#     current_app.logger.debug("start :")
+#     find = find_user_and_chat(val)
+#     resp = dumps(find)
+#     current_app.logger.debug(resp)
+#     current_app.logger.debug(find)
+#     return resp
 
+@bp.route('/getinfo/<val>', methods=['GET'])
+def find_info(val):
+        chat_cursor = find_chat(val)
+        user_cursor = find_friend(val)
+        if chat_cursor and user_cursor:
+            # Convert ObjectId objects to strings
+            chat_list = [{k: (str(v) if isinstance(v, ObjectId) else v) for k, v in doc.items()} for doc in chat_cursor]
+            user_list = [{k: (str(v) if isinstance(v, ObjectId) else v) for k, v in doc.items()} for doc in user_cursor]
+            result = chat_list + user_list
+            if len(result) != 0:
+                return jsonify(result)
+            else:
+                return "nothing was found"
+
+#telp logged in user
+#display chat pada inbox sesuai dengan user dan message terbaru
+@bp.route('/inbox/<to_telp>', methods=['GET'])
+def inbox(to_telp):
+    resp = display_inbox(to_telp)
+    return dumps(resp)
+    
 if __name__ == "__main__":
     bp.run(debug=True)
